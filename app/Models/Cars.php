@@ -14,6 +14,5 @@ class Cars extends Model
         'name',
         'cc',
         'year',
-        'price'
     ];
 }

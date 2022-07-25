@@ -20,6 +20,7 @@ class CreateCarsTable extends Migration
             $table->string("cc");
             $table->string("year");
             $table->float("price");
+            $table->string("image");
             $table->timestamps();
         });
     }
