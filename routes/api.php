@@ -4,6 +4,8 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\JWTController;
 use App\Http\Controllers\Users_controller;
 use App\Http\Controllers\Roles_controller;
+use App\Http\Controllers\Cars_controller;
+
 
 
 /*
@@ -44,4 +46,15 @@ Route::group([
     Route::get('/roles/list', [Roles_controller::class, 'findAll']);
     Route::delete('/roles/delete/{id}', [Roles_controller::class, 'deleteOne']);
     Route::delete('/roles/delete', [Roles_controller::class, 'deleteAll']);     
+});
+
+Route::group([
+    'middleware' => 'api',
+], function ($router) {
+    Route::post('/cars/create', [Cars_controller::class, 'create']);
+    Route::put('/cars/update/{id}', [Cars_controller::class, 'update']);
+    Route::get('/cars/list/{id}', [Cars_controller::class, 'findOne']);
+    Route::get('/cars/list', [Cars_controller::class, 'findAll']);
+    Route::delete('/cars/delete/{id}', [Cars_controller::class, 'deleteOne']);
+    Route::delete('/cars/delete', [Cars_controller::class, 'deleteAll']);     
 });
