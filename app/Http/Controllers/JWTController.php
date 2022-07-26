@@ -3,6 +3,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Models\User;
+use App\Models\UserRole;
 use Validator;
 use Twilio\Rest\Client;
 
@@ -66,11 +67,14 @@ class JWTController extends Controller
             return response()->json($validator->errors()->toJson(), 400);
         }
         $number = $this->validateNumber($request->phone, $request->name);
-        echo $number;
+
+        $roleIds = [2];
+
         $user = User::create(array_merge(
                     $validator->validated(),
-                    ['password' => bcrypt($request->password)]
+                    ['password' => bcrypt($request->password),]
                 ));
+                $user->roles()->attach($roleIds);
         return response()->json([
             'message' => 'User successfully registered',
             'user' => $user
