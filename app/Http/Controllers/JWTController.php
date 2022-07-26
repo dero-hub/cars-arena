@@ -4,6 +4,8 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Models\User;
 use Validator;
+use Twilio\Rest\Client;
+
 
 class JWTController extends Controller
 {
@@ -15,11 +17,27 @@ class JWTController extends Controller
     public function __construct() {
         $this->middleware('auth:api', ['except' => ['login', 'register']]);
     }
-    /**
-     * Get a JWT via given credentials.
-     *
-     * @return \Illuminate\Http\JsonResponse
-     */
+
+    public function profile() {
+        return auth()->user();
+    }
+    
+    public function validateNumber($phone, $name)
+    {
+        $sid = env('TWILIO_SID');
+        $token = env('TWILIO_TOKEN');
+        $client = new Client($sid, $token);
+
+        return  $client->messages->create(
+            $phone,
+            [
+                'from' => '+17375308130',
+                'body' => 'Hello ' . $name . ' Welcome to Cars Arena!'
+            ]
+        );
+
+    }
+
     public function login(Request $request){
     	$validator = Validator::make($request->all(), [
             'phone' => 'required|string',
@@ -47,6 +65,8 @@ class JWTController extends Controller
         if($validator->fails()){
             return response()->json($validator->errors()->toJson(), 400);
         }
+        $number = $this->validateNumber($request->phone, $request->name);
+        echo $number;
         $user = User::create(array_merge(
                     $validator->validated(),
                     ['password' => bcrypt($request->password)]
