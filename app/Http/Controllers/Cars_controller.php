@@ -9,14 +9,14 @@ use Cloudinary\Api\Upload\UploadApi;
 
 class Cars_controller extends Controller
 {
-    // public function __construct() {
-    //     $this->middleware('auth:api', ['except' => ['login', 'register']]);
-    // }
+    public function __construct() {
+        $this->middleware('auth:api', ['except' => ['login', 'register']]);
+    }
 
     public function create(Request $request)
     {
 
-        $uploadedFileUrl = (new UploadApi())->upload($request->file('image')->getRealPath())->getSecurePath();
+        $uploadedFileUrl = (new UploadApi())->upload($request->file('image')->getRealPath());
 
         if($request->has('model') 
         && $request->has('name') 
@@ -31,7 +31,7 @@ class Cars_controller extends Controller
             $car->cc = $request->cc;
             $car->year = $request->year;
             $car->price = $request->price;
-            $car->image = $uploadedFileUrl;
+            $car->image = $uploadedFileUrl['secure_url'];
 
 
             $car->save();
@@ -44,7 +44,7 @@ class Cars_controller extends Controller
 
     public function update(Request $request, $id)
     {
-        $uploadedFileUrl = (new UploadApi())->upload($request->file('image')->getRealPath())->getSecurePath();
+        $uploadedFileUrl = (new UploadApi())->upload($request->file('image')->getRealPath());
 
         if($request->has('model') 
         || $request->has('name') 
@@ -59,7 +59,7 @@ class Cars_controller extends Controller
             $car->cc = $request->cc;
             $car->year = $request->year;
             $car->price = $request->price;
-            $car->image = $uploadedFileUrl;
+            $car->image = $uploadedFileUrl['secure_url'];
 
 
             $car->save();
